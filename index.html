@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Craft Bar – A Bartender's Guide</title>
+  <meta name="description" content="The Craft Bar – your ultimate guide to cocktails, recipes, and professional bar equipment for bartenders and enthusiasts." />
+  <meta name="keywords" content="cocktails, bartender guide, cocktail recipes, bar equipment, mixology" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="The Craft Bar – A Bartender's Guide" />
+  <meta property="og:description" content="Explore classic and modern cocktail recipes plus professional bar equipment guides." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./index.css" />
+</head>
+<body>
+
+  <!-- navbar -->
+  <div class="navbar">
+    <a href="./index.html" class="logo">The Craft <span>Bar</span></a>
+    <nav id="mainNav">
+      <a href="./index.html" class="active">Home</a>
+      <a href="./cocktails.html">Cocktails</a>
+      <a href="./equipment.html">Equipment</a>
+      <a href="./contact.html">Contact</a>
+    </nav>
+    <label class="menuButton">
+      <input type="checkbox" id="check" onclick="toggleNav()" />
+      <span class="top"></span>
+      <span class="mid"></span>
+      <span class="bot"></span>
+    </label>
+  </div>
+
+  <!-- hero -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>The Craft Bar</h1>
+      <p>Your ultimate guide to cocktails, spirits, and the art of mixology — crafted by a bartender with 7 years behind the bar.</p>
+      <a href="./cocktails.html" class="btn-gold">Explore Cocktails</a>
+    </div>
+  </div>
+
+  <!-- stats strip -->
+  <div class="intro-strip">
+    <div class="intro-strip-item">
+      <h3>6</h3>
+      <p>Cocktail Recipes</p>
+    </div>
+    <div class="intro-strip-item">
+      <h3>7</h3>
+      <p>Years Behind the Bar</p>
+    </div>
+    <div class="intro-strip-item">
+      <h3>5</h3>
+      <p>Spirit Categories</p>
+    </div>
+  </div>
+
+  <!--featured cocktails -->
+  <section>
+    <div class="section-title">
+      <h2>Featured Cocktails</h2>
+      <div class="divider"></div>
+      <p>A curated selection of timeless classics and modern favorites.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1678862656842-1961c061751e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Old Fashioned" />
+        <div class="card-body">
+          <h3>Old Fashioned</h3>
+          <p>Bourbon, sugar, Angostura bitters, and an orange twist. The grandfather of all cocktails.</p>
+          <span class="card-tag">Whiskey</span>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1551751299-1b51cab2694c?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Negroni" />
+        <div class="card-body">
+          <h3>Negroni</h3>
+          <p>Equal parts gin, Campari, and sweet vermouth. Bold, bitter, and unforgettable.</p>
+          <span class="card-tag">Gin</span>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1632987790465-2634b43c4289?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Margarita" />
+        <div class="card-body">
+          <h3>Margarita</h3>
+          <p>Tequila, triple sec, and fresh lime juice. The world's most ordered cocktail.</p>
+          <span class="card-tag">Tequila</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top: 50px;">
+      <a href="./cocktails.html" class="btn-gold">View All Cocktails</a>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <footer>
+    <a href="#" class="footer-logo">The Craft Bar</a>
+    <div class="footer-copy">© 2025 The Craft Bar. All rights reserved.</div>
+  </footer>
+
+  <script src="./burger.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cocktail Recipes – The Craft Bar</title>
+  <meta name="description" content="Browse our full collection of cocktail recipes — from classic Old Fashioneds to modern craft drinks." />
+  <meta name="keywords" content="cocktail recipes, Old Fashioned, Negroni, Margarita, Daiquiri, mixology" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./cocktails.css" />
+</head>
+<body>
+
+  <!--navbar -->
+  <div class="navbar">
+    <a href="./index.html" class="logo">The Craft <span>Bar</span></a>
+    <nav id="mainNav">
+      <a href="./index.html">Home</a>
+      <a href="./cocktails.html" class="active">Cocktails</a>
+      <a href="./equipment.html">Equipment</a>
+      <a href="./contact.html">Contact</a>
+    </nav>
+    <label class="menuButton">
+      <input type="checkbox" id="check" onclick="toggleNav()" />
+      <span class="top"></span>
+      <span class="mid"></span>
+      <span class="bot"></span>
+    </label>
+  </div>
+
+  <!--page header-->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1>Cocktail Recipes</h1>
+      <p>From timeless classics to modern craft creations</p>
+    </div>
+  </div>
+
+  <!--cocktails-->
+  <section>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search cocktails..." onkeyup="searchCocktails()" />
+      <button onclick="searchCocktails()">Search</button>
+    </div>
+
+    <div class="cards-grid" id="cocktailGrid">
+      <div class="card" data-name="old fashioned">
+        <img src="https://images.unsplash.com/photo-1678862656842-1961c061751e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Old Fashioned" />
+        <div class="card-body">
+          <h3>Old Fashioned</h3>
+          <p>60 ml Bourbon, sugar cube, 3-4 dash of Angostura bitters. Stir with ice, strain into a rocks glass with big cube, garnish with orange peel.</p>
+          <span class="card-tag">Whiskey</span>
+        </div>
+      </div>
+      <div class="card" data-name="negroni">
+        <img src="https://images.unsplash.com/photo-1551751299-1b51cab2694c?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Negroni" />
+        <div class="card-body">
+          <h3>Negroni</h3>
+          <p>30ml gin, 30ml Campari, 30ml sweet vermouth. Stir with ice, strain over a large cube, garnish with orange peel.</p>
+          <span class="card-tag">Gin</span>
+        </div>
+      </div>
+      <div class="card" data-name="margarita">
+        <img src="https://images.unsplash.com/photo-1632987790465-2634b43c4289?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Margarita" />
+        <div class="card-body">
+          <h3>Margarita</h3>
+          <p>60ml tequila, 30ml triple sec, 30ml fresh lime juice. Shake with ice, strain into a salt-rimmed glass.</p>
+          <span class="card-tag">Tequila</span>
+        </div>
+      </div>
+      <div class="card" data-name="daiquiri">
+        <img src="https://cdn.diffordsguide.com/cocktail/zAM3bO/lifestyle/0/1024x.webp?v=1758195746" alt="Daiquiri" />
+        <div class="card-body">
+          <h3>Daiquiri</h3>
+          <p>60ml white rum, 30ml fresh lime juice, 10ml simple syrup. Shake hard with ice and double strain.</p>
+          <span class="card-tag">Rum</span>
+        </div>
+      </div>
+      <div class="card" data-name="moscow mule">
+        <img src="https://plus.unsplash.com/premium_photo-1664472626660-84da1f19d60e?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Moscow Mule" />
+        <div class="card-body">
+          <h3>Moscow Mule</h3>
+          <p>60ml vodka, 25ml lime juice, top with ginger beer. Serve in a copper mug over ice with a lime wedge.</p>
+          <span class="card-tag">Vodka</span>
+        </div>
+      </div>
+      <div class="card" data-name="espresso martini">
+        <img src="https://images.unsplash.com/photo-1676471793068-0db319151c3a?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Espresso Martini" />
+        <div class="card-body">
+          <h3>Espresso Martini</h3>
+          <p>60ml vodka, 30ml espresso, 25ml coffee liqueur, 1 bar spoon simple syrup. Shake vigorously and strain.</p>
+          <span class="card-tag">Vodka</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer-->
+  <footer>
+    <a href="#" class="footer-logo">The Craft Bar</a>
+    <div class="footer-copy">© 2025 The Craft Bar. All rights reserved.</div>
+  </footer>
+
+  <script src="./burger.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

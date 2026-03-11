@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact & Register – The Craft Bar</title>
+  <meta name="description" content="Get in touch or register for The Craft Bar newsletter to receive new cocktail recipes and tips." />
+  <meta name="keywords" content="contact, register, cocktail newsletter, bartender community" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./contact.css" />
+</head>
+<body>
+
+  <!-- navbar -->
+  <div class="navbar">
+    <a href="./index.html" class="logo">The Craft <span>Bar</span></a>
+    <nav id="mainNav">
+      <a href="./index.html">Home</a>
+      <a href="./cocktails.html">Cocktails</a>
+      <a href="./equipment.html">Equipment</a>
+      <a href="./contact.html" class="active">Contact</a>
+    </nav>
+    <label class="menuButton">
+      <input type="checkbox" id="check" onclick="toggleNav()" />
+      <span class="top"></span>
+      <span class="mid"></span>
+      <span class="bot"></span>
+    </label>
+  </div>
+
+  <!--page header -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1>Contact & Register</h1>
+      <p>Join the community or send us a message</p>
+    </div>
+  </div>
+
+  <!--form-->
+  <section>
+    <div class="section-title">
+      <h2>Register</h2>
+      <div class="divider"></div>
+      <p>Sign up to receive new recipes, tips, and bar guides straight to your inbox.</p>
+    </div>
+
+    <div class="form-container">
+      <form>
+        <div class="form-row">
+          <div class="input-box">
+            <label>First Name</label>
+            <input type="text" placeholder="Alex" required />
+          </div>
+          <div class="input-box">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="input-box">
+            <label>Email Address</label>
+            <input type="email" placeholder="alex@example.com" required />
+          </div>
+          <div class="input-box">
+            <label>Experience Level</label>
+            <select>
+              <option value="">Select...</option>
+              <option>Beginner</option>
+              <option>Home Bartender</option>
+              <option>Professional Bartender</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="input-box full">
+            <label>Message (Optional)</label>
+            <textarea placeholder="Tell us about your bar journey..."></textarea>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:10px;">
+          <button type="submit" class="btn-gold">Register Now</button>
+        </div>
+      </form>
+    </div>
+
+    <div style="text-align:center; margin-top: 80px; opacity: 0.6;">
+      <p style="margin-bottom:8px; letter-spacing:1px; text-transform:uppercase; font-size:13px;">Get in touch</p>
+      <p>thecraftbar@email.com</p>
+    </div>
+  </section>
+
+  <!-- footer-->
+  <footer>
+    <a href="#" class="footer-logo">The Craft Bar</a>
+    <div class="footer-copy">© 2025 The Craft Bar. All rights reserved.</div>
+  </footer>
+
+  <script src="./burger.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
