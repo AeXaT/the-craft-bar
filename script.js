@@ -9,6 +9,9 @@ const AUTH_BASE = 'https://api.everrest.educata.dev/auth';
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem('craftbar_user') || 'null');
 }
+function getToken() {
+  return getCurrentUser()?.access_token || null;
+}
 function isLoggedIn() { return !!getCurrentUser(); }
 
 function updateNavAuth() {
@@ -65,9 +68,14 @@ async function apiLogout() {
 }
 
 async function apiUpdateProfile(data) {
+  const token = getToken();
   const res = await fetch(`${AUTH_BASE}/update`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
     credentials: 'include',
     body: JSON.stringify(data)
   });
@@ -76,9 +84,14 @@ async function apiUpdateProfile(data) {
 }
 
 async function apiChangePassword(currentPassword, newPassword) {
+  const token = getToken();
   const res = await fetch(`${AUTH_BASE}/change_password`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    },
     credentials: 'include',
     body: JSON.stringify({ currentPassword, newPassword })
   });
@@ -539,7 +552,7 @@ async function initProfilePage() {
     btn.disabled = false; btn.textContent = 'Save Changes';
 
     if (result.ok) {
-      // Update stored user
+      // Update stored user, preserving the token
       const stored = { ...getCurrentUser(), ...updateData };
       localStorage.setItem('craftbar_user', JSON.stringify(stored));
       // Refresh sidebar
@@ -629,7 +642,10 @@ function initAuthPage() {
     if (result.ok) {
       const loginResult = await apiLogin(email, password);
       if (loginResult.ok) {
-        localStorage.setItem('craftbar_user', JSON.stringify({ firstName, lastName, email, age, gender, address, phone, zipcode, avatar }));
+        localStorage.setItem('craftbar_user', JSON.stringify({
+          firstName, lastName, email, age, gender, address, phone, zipcode, avatar,
+          access_token: loginResult.data.access_token || loginResult.data.token || ''
+        }));
         showToast('Welcome to The Craft Bar, ' + firstName + '!');
         setTimeout(() => window.location.href = './index.html', 1000);
       } else {
@@ -660,7 +676,11 @@ function initAuthPage() {
     if (result.ok) {
       const namePart  = email.split('@')[0];
       const firstName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-      localStorage.setItem('craftbar_user', JSON.stringify({ firstName, email }));
+      localStorage.setItem('craftbar_user', JSON.stringify({
+        firstName,
+        email,
+        access_token: result.data.access_token || result.data.token || ''
+      }));
       showToast('Welcome back, ' + firstName + '!');
       setTimeout(() => window.location.href = './index.html', 1000);
     } else {
