@@ -5,6 +5,16 @@
 const API_BASE  = 'https://www.thecocktaildb.com/api/json/v1/1';
 const AUTH_BASE = 'https://api.everrest.educata.dev/auth';
 
+/* ── Password eye toggle ──────────────────────────────────── */
+function toggleEye(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isHidden = input.type === 'password';
+  input.type = isHidden ? 'text' : 'password';
+  btn.style.opacity = isHidden ? '1' : '0.4';
+}
+
+/* ── Auth helpers ─────────────────────────────────────────── */
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem('craftbar_user') || 'null');
 }
@@ -30,6 +40,7 @@ function updateNavAuth() {
   if (favBtn) favBtn.style.display = user ? 'flex' : 'none';
 }
 
+/* ── API Auth calls ───────────────────────────────────────── */
 async function apiRegister(data) {
   const res = await fetch(`${AUTH_BASE}/sign_up`, {
     method: 'POST',
@@ -81,21 +92,37 @@ async function apiUpdateProfile(data) {
   return { ok: res.ok, data: json };
 }
 
-async function apiChangePassword(currentPassword, newPassword) {
+async function apiChangePassword(oldPassword, newPassword) {
   const token = getToken();
+  if (!token) return { ok: false, data: { error: 'Not logged in. Please log in again.' } };
   const res = await fetch(`${AUTH_BASE}/change_password`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'accept': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      'Authorization': `Bearer ${token}`
     },
     credentials: 'include',
-    body: JSON.stringify({ currentPassword, newPassword })
+    body: JSON.stringify({ oldPassword, newPassword })
   });
   const json = await res.json().catch(() => ({}));
   return { ok: res.ok, data: json };
 }
+
+async function apiDeleteAccount() {
+  const token = getToken();
+  if (!token) return { ok: false, data: { error: 'Not logged in.' } };
+  const res = await fetch(`${AUTH_BASE}/delete`, {
+    method: 'DELETE',
+    headers: {
+      'accept': '*/*',
+      'Authorization': `Bearer ${token}`
+    },
+    credentials: 'include'
+  });
+  return { ok: res.ok };
+}
+
 
 function formatAuthError(json) {
   if (!json) return 'Something went wrong. Please try again.';
@@ -109,6 +136,8 @@ function formatAuthError(json) {
   return 'Something went wrong. Please try again.';
 }
 
+
+/* ── Welcome email via EmailJS ────────────────────────────── */
 function sendWelcomeEmail(firstName, lastName, email) {
   if (typeof emailjs === 'undefined') return;
   emailjs.send('craft_bar', 'template_ebktx7v', {
@@ -117,6 +146,7 @@ function sendWelcomeEmail(firstName, lastName, email) {
   }).catch(() => {});
 }
 
+/* ── Favourites ───────────────────────────────────────────── */
 function getFavourites() { return JSON.parse(localStorage.getItem('craftbar_favourites') || '[]'); }
 function saveFavourites(f) { localStorage.setItem('craftbar_favourites', JSON.stringify(f)); }
 function isFavourite(id) { return getFavourites().some(f => f.idDrink === id); }
@@ -158,6 +188,7 @@ function removeFav(id) {
   saveFavourites(getFavourites().filter(f => f.idDrink !== id));
   renderFavDrawer();
   refreshHearts();
+  // also re-render profile favourites if on profile page
   if (document.getElementById('profileFavGrid')) renderProfileFavourites();
 }
 
@@ -173,6 +204,7 @@ function toggleFavDrawer() {
   document.getElementById('favDrawer')?.classList.toggle('open');
 }
 
+/* ── Ingredients helper ───────────────────────────────────── */
 function getIngredients(drink) {
   const list = [];
   for (let i = 1; i <= 15; i++) {
@@ -183,6 +215,7 @@ function getIngredients(drink) {
   return list;
 }
 
+/* ── Cocktail API ─────────────────────────────────────────── */
 async function fetchAllDrinks() {
   const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
   const results = await Promise.all(
@@ -211,6 +244,7 @@ async function fetchDrinkById(id) {
   return data.drinks ? data.drinks[0] : null;
 }
 
+/* ── Detail popup ─────────────────────────────────────────── */
 async function openDetailModal(id) {
   const overlay = document.getElementById('detailOverlay');
   const body    = document.getElementById('detailBody');
@@ -269,6 +303,7 @@ function closeDetailModal() {
   if (overlay) overlay.classList.remove('open');
 }
 
+/* ── Build card ───────────────────────────────────────────── */
 function buildCard(drink) {
   const fav  = isFavourite(drink.idDrink);
   const img  = drink.strDrinkThumb || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400';
@@ -303,6 +338,7 @@ function buildCard(drink) {
     </div>`;
 }
 
+/* ── Toast ────────────────────────────────────────────────── */
 function showToast(msg, type) {
   let t = document.getElementById('toast');
   if (!t) { t = document.createElement('div'); t.id = 'toast'; document.body.appendChild(t); }
@@ -312,7 +348,10 @@ function showToast(msg, type) {
   t._timer = setTimeout(() => { t.className = ''; }, 3000);
 }
 
-let allDrinks = [], activeCategory = '', activeIngredient = '';
+/* ── Cocktails page ───────────────────────────────────────── */
+let allDrinks      = [];
+let activeCategory   = '';
+let activeIngredient = '';
 
 async function initCocktailsPage() {
   updateNavAuth();
@@ -330,7 +369,10 @@ async function initCocktailsPage() {
       o.value = c; o.textContent = c;
       catSelect.appendChild(o);
     });
-    catSelect.addEventListener('change', () => { activeCategory = catSelect.value; applyFilters(); });
+    catSelect.addEventListener('change', () => {
+      activeCategory = catSelect.value;
+      applyFilters();
+    });
   }
 
   if (loader) loader.style.display = 'flex';
@@ -346,7 +388,8 @@ async function initCocktailsPage() {
         if (name && name.trim()) {
           const key = name.trim().toLowerCase();
           if (!ingMap.has(key)) {
-            ingMap.set(key, name.trim().charAt(0).toUpperCase() + name.trim().slice(1));
+            const display = name.trim().charAt(0).toUpperCase() + name.trim().slice(1);
+            ingMap.set(key, display);
           }
         }
       }
@@ -358,7 +401,10 @@ async function initCocktailsPage() {
       o.value = ing; o.textContent = ing;
       ingSelect.appendChild(o);
     });
-    ingSelect.addEventListener('change', () => { activeIngredient = ingSelect.value; applyFilters(); });
+    ingSelect.addEventListener('change', () => {
+      activeIngredient = ingSelect.value;
+      applyFilters();
+    });
   }
 
   renderGrid(allDrinks);
@@ -367,13 +413,18 @@ async function initCocktailsPage() {
 function renderGrid(drinks) {
   const grid = document.getElementById('cocktailGrid');
   if (!grid) return;
-  grid.innerHTML = drinks.length ? drinks.map(buildCard).join('') : '<p class="no-results">No cocktails found.</p>';
+  grid.innerHTML = drinks.length
+    ? drinks.map(buildCard).join('')
+    : '<p class="no-results">No cocktails found.</p>';
 }
 
 function applyFilters() {
   const searchVal = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
   let drinks = [...allDrinks];
-  if (activeCategory) drinks = drinks.filter(d => d.strCategory === activeCategory);
+
+  if (activeCategory)
+    drinks = drinks.filter(d => d.strCategory === activeCategory);
+
   if (activeIngredient) {
     const ing = activeIngredient.toLowerCase();
     drinks = drinks.filter(d => {
@@ -384,26 +435,42 @@ function applyFilters() {
       return false;
     });
   }
-  if (searchVal) drinks = drinks.filter(d => (d.strDrink || '').toLowerCase().includes(searchVal));
+
+  if (searchVal)
+    drinks = drinks.filter(d => (d.strDrink || '').toLowerCase().includes(searchVal));
+
   renderGrid(drinks);
 }
 
 function searchCocktails() { applyFilters(); }
 
+/* ── Featured cocktails (homepage) ───────────────────────── */
 async function initFeaturedCocktails() {
   const grid = document.getElementById('featuredGrid');
   if (!grid) return;
-  grid.innerHTML = `<div style="grid-column:1/-1;display:flex;justify-content:center;align-items:center;gap:16px;padding:40px;opacity:0.7;flex-direction:column;"><div class="loader-spinner"></div><p>Loading...</p></div>`;
+
+  grid.innerHTML = `
+    <div style="grid-column:1/-1;display:flex;justify-content:center;align-items:center;
+                gap:16px;padding:40px;opacity:0.7;flex-direction:column;">
+      <div class="loader-spinner"></div><p>Loading...</p>
+    </div>`;
+
   const names  = ['Old Fashioned', 'Negroni', 'Margarita'];
   const drinks = (await Promise.all(
-    names.map(n => fetch(`${API_BASE}/search.php?s=${encodeURIComponent(n)}`).then(r => r.json()).then(d => d.drinks ? d.drinks[0] : null))
+    names.map(n =>
+      fetch(`${API_BASE}/search.php?s=${encodeURIComponent(n)}`)
+        .then(r => r.json()).then(d => d.drinks ? d.drinks[0] : null)
+    )
   )).filter(Boolean);
+
   grid.innerHTML = drinks.map(drink => {
-    const ings = getIngredients(drink);
+    const ings    = getIngredients(drink);
     const ingTags = ings.slice(0, 4).map(i => `<span class="card-ing-tag">${i.name}</span>`).join('');
     return `
       <div class="card" onclick="openDetailModal('${drink.idDrink}')">
-        <div class="card-img-wrap"><img src="${drink.strDrinkThumb}" alt="${drink.strDrink}" loading="lazy" /></div>
+        <div class="card-img-wrap">
+          <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}" loading="lazy" />
+        </div>
         <div class="card-body">
           <h3>${drink.strDrink}</h3>
           <div class="card-ingredients">${ingTags}</div>
@@ -413,6 +480,7 @@ async function initFeaturedCocktails() {
   }).join('');
 }
 
+/* ── Profile page ─────────────────────────────────────────── */
 function doLogout() { apiLogout(); }
 
 function previewAvatar(url) {
@@ -429,7 +497,10 @@ function renderProfileFavourites() {
   if (!grid) return;
   const favs = getFavourites();
   if (!favs.length) {
-    grid.innerHTML = `<div class="fav-empty">No favourites yet.<br>Browse <a href="./cocktails.html" style="color:#d4a043;">cocktails</a> and click ❤️</div>`;
+    grid.innerHTML = `<div class="fav-empty">
+      No favourites yet.<br>
+      Browse <a href="./cocktails.html" style="color:#d4a043;">cocktails</a> and click ❤️
+    </div>`;
     return;
   }
   grid.innerHTML = favs.map(f => `
@@ -440,20 +511,30 @@ function renderProfileFavourites() {
       <div class="fav-body">
         <h4>${f.strDrink}</h4>
         <small>${f.strCategory || ''}</small>
-        <button class="fav-rm" onclick="removeFav('${f.idDrink}')">🗑 Remove from favourites</button>
+        <button class="fav-rm" onclick="removeFav('${f.idDrink}')">
+          🗑 Remove from favourites
+        </button>
       </div>
     </div>`).join('');
 }
 
 async function initProfilePage() {
   if (!isLoggedIn()) { window.location.href = './auth.html'; return; }
+
   const user = getCurrentUser();
+
+  // Populate sidebar
   document.getElementById('sidebarName').textContent  = (user.firstName || '') + ' ' + (user.lastName || '');
   document.getElementById('sidebarEmail').textContent = user.email || '';
-  document.getElementById('sidebarAvatar').src = user.avatar ||
-    'https://ui-avatars.com/api/?background=d4a043&color=1a1008&name=' +
-    encodeURIComponent((user.firstName || 'U') + '+' + (user.lastName || ''));
+  if (user.avatar) {
+    document.getElementById('sidebarAvatar').src = user.avatar;
+  } else {
+    document.getElementById('sidebarAvatar').src =
+      'https://ui-avatars.com/api/?background=d4a043&color=1a1008&name=' +
+      encodeURIComponent((user.firstName || 'U') + '+' + (user.lastName || ''));
+  }
 
+  // Populate info form
   document.getElementById('infoFirstName').value = user.firstName || '';
   document.getElementById('infoLastName').value  = user.lastName  || '';
   document.getElementById('infoAge').value       = user.age       || '';
@@ -463,8 +544,11 @@ async function initProfilePage() {
   document.getElementById('infoPhone').value     = user.phone     || '';
   document.getElementById('infoZipcode').value   = user.zipcode   || '';
   document.getElementById('infoAvatar').value    = user.avatar    || '';
-  if (user.avatar) document.getElementById('avatarPreview').src = user.avatar;
+  if (user.avatar) {
+    document.getElementById('avatarPreview').src = user.avatar;
+  }
 
+  // Panel switching
   document.querySelectorAll('.snav[data-panel]').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.snav').forEach(b => b.classList.remove('on'));
@@ -475,31 +559,41 @@ async function initProfilePage() {
     });
   });
 
+  // Render favourites immediately if that's the active panel
   renderProfileFavourites();
 
+  /* ── Update info form ─────────────────────────────────── */
   document.getElementById('infoForm').addEventListener('submit', async e => {
     e.preventDefault();
     const msg = document.getElementById('infoMsg');
     const btn = document.getElementById('infoBtn');
     msg.className = 'msg';
     btn.disabled = true; btn.textContent = 'Saving...';
-    const avatarVal = document.getElementById('infoAvatar').value.trim();
-    const firstName = document.getElementById('infoFirstName').value.trim();
-    const lastName  = document.getElementById('infoLastName').value.trim();
+
+    const avatarVal  = document.getElementById('infoAvatar').value.trim();
+    const firstName  = document.getElementById('infoFirstName').value.trim();
+    const lastName   = document.getElementById('infoLastName').value.trim();
     const updateData = {
-      firstName, lastName,
+      firstName,
+      lastName,
       age:     parseInt(document.getElementById('infoAge').value),
       gender:  document.getElementById('infoGender').value,
       email:   document.getElementById('infoEmail').value.trim(),
       address: document.getElementById('infoAddress').value.trim(),
       phone:   document.getElementById('infoPhone').value.trim(),
       zipcode: document.getElementById('infoZipcode').value.trim(),
-      avatar:  avatarVal || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(firstName + '+' + lastName) + '&background=d4a043&color=1a1008',
+      avatar:  avatarVal || 'https://ui-avatars.com/api/?name=' +
+               encodeURIComponent(firstName + '+' + lastName) + '&background=d4a043&color=1a1008',
     };
+
     const result = await apiUpdateProfile(updateData);
     btn.disabled = false; btn.textContent = 'Save Changes';
+
     if (result.ok) {
-      localStorage.setItem('craftbar_user', JSON.stringify({ ...getCurrentUser(), ...updateData }));
+      // Update stored user, preserving the token
+      const stored = { ...getCurrentUser(), ...updateData };
+      localStorage.setItem('craftbar_user', JSON.stringify(stored));
+      // Refresh sidebar
       document.getElementById('sidebarName').textContent = firstName + ' ' + lastName;
       document.getElementById('sidebarAvatar').src = updateData.avatar;
       if (updateData.avatar) document.getElementById('avatarPreview').src = updateData.avatar;
@@ -511,17 +605,28 @@ async function initProfilePage() {
     }
   });
 
+  /* ── Change password form ─────────────────────────────── */
   document.getElementById('passForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const msg = document.getElementById('passMsg');
-    const btn = document.getElementById('passBtn');
-    const np  = document.getElementById('newPass').value;
-    const cp  = document.getElementById('confirmPass').value;
+    const msg  = document.getElementById('passMsg');
+    const btn  = document.getElementById('passBtn');
+    const np   = document.getElementById('newPass').value;
+    const cp   = document.getElementById('confirmPass').value;
     msg.className = 'msg';
-    if (np !== cp) { msg.textContent = 'New passwords do not match.'; msg.className = 'msg err'; return; }
+
+    if (np !== cp) {
+      msg.textContent = 'New passwords do not match.';
+      msg.className = 'msg err';
+      return;
+    }
+
     btn.disabled = true; btn.textContent = 'Updating...';
-    const result = await apiChangePassword(document.getElementById('currentPass').value, np);
+    const result = await apiChangePassword(
+      document.getElementById('currentPass').value,
+      np
+    );
     btn.disabled = false; btn.textContent = 'Update Password';
+
     if (result.ok) {
       document.getElementById('passForm').reset();
       msg.textContent = 'Password changed successfully!';
@@ -533,6 +638,60 @@ async function initProfilePage() {
   });
 }
 
+
+/* ── Delete account helpers ───────────────────────────────── */
+function showDeleteConfirm() {
+  document.getElementById('deleteConfirm').style.display = 'block';
+  document.getElementById('deleteBtn').textContent = 'Confirm Delete';
+  document.getElementById('deleteBtn').onclick = doDeleteAccount;
+  document.getElementById('deleteCancelBtn').style.display = 'inline-block';
+}
+
+function hideDeleteConfirm() {
+  document.getElementById('deleteConfirm').style.display = 'none';
+  document.getElementById('deletePass').value = '';
+  document.getElementById('deleteBtn').textContent = 'Delete My Account';
+  document.getElementById('deleteBtn').onclick = showDeleteConfirm;
+  document.getElementById('deleteCancelBtn').style.display = 'none';
+  const msg = document.getElementById('deleteMsg');
+  msg.className = 'msg';
+}
+
+async function doDeleteAccount() {
+  const msg = document.getElementById('deleteMsg');
+  const btn = document.getElementById('deleteBtn');
+  const password = document.getElementById('deletePass').value;
+
+  if (!password) {
+    msg.textContent = 'Please enter your password to confirm.';
+    msg.className = 'msg err';
+    return;
+  }
+
+  // Verify password by signing in first
+  const user = getCurrentUser();
+  const loginCheck = await apiLogin(user.email, password);
+  if (!loginCheck.ok) {
+    msg.textContent = 'Incorrect password. Account not deleted.';
+    msg.className = 'msg err';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Deleting...';
+  const result = await apiDeleteAccount();
+
+  if (result.ok) {
+    localStorage.removeItem('craftbar_user');
+    showToast('Account deleted. Sorry to see you go!');
+    setTimeout(() => window.location.href = './index.html', 1500);
+  } else {
+    btn.disabled = false; btn.textContent = 'Confirm Delete';
+    msg.textContent = 'Something went wrong. Please try again.';
+    msg.className = 'msg err';
+  }
+}
+
+/* ── Forgot Password ──────────────────────────────────────── */
 function showForgotPassword() {
   document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('forgotPanel').classList.add('active');
@@ -545,6 +704,7 @@ function hideForgotPassword() {
   document.querySelector('[data-panel="loginPanel"]').classList.add('active');
 }
 
+/* ── Auth page ────────────────────────────────────────────── */
 function initAuthPage() {
   if (isLoggedIn()) { window.location.href = './profile.html'; return; }
 
@@ -557,12 +717,14 @@ function initAuthPage() {
     });
   });
 
+  /* Register */
   document.getElementById('registerForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const errBox = document.getElementById('registerError');
     const btn    = document.getElementById('registerBtn');
     errBox.classList.remove('visible');
     btn.disabled = true; btn.textContent = 'Creating account...';
+
     const firstName = document.getElementById('regFirstName').value.trim();
     const lastName  = document.getElementById('regLastName').value.trim();
     const age       = parseInt(document.getElementById('regAge').value);
@@ -573,13 +735,21 @@ function initAuthPage() {
     const phone     = document.getElementById('regPhone').value.trim();
     const zipcode   = document.getElementById('regZipcode').value.trim();
     const avatarVal = document.getElementById('regAvatar').value.trim();
-    const avatar    = avatarVal || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(firstName + '+' + lastName) + '&background=d4a043&color=1a1008';
+    const avatar    = avatarVal ||
+      'https://ui-avatars.com/api/?name=' + encodeURIComponent(firstName + '+' + lastName) +
+      '&background=d4a043&color=1a1008';
+
     const result = await apiRegister({ firstName, lastName, age, email, password, address, phone, zipcode, avatar, gender });
+
     btn.disabled = false; btn.textContent = 'Create Account';
+
     if (result.ok) {
       const loginResult = await apiLogin(email, password);
       if (loginResult.ok) {
-        localStorage.setItem('craftbar_user', JSON.stringify({ firstName, lastName, email, age, gender, address, phone, zipcode, avatar, access_token: loginResult.data.access_token || loginResult.data.token || '' }));
+        localStorage.setItem('craftbar_user', JSON.stringify({
+          firstName, lastName, email, age, gender, address, phone, zipcode, avatar,
+          access_token: loginResult.data.access_token || loginResult.data.token || ''
+        }));
         sendWelcomeEmail(firstName, lastName, email);
         showToast('Welcome to The Craft Bar, ' + firstName + '!');
         setTimeout(() => window.location.href = './index.html', 1000);
@@ -594,27 +764,32 @@ function initAuthPage() {
     }
   });
 
+  /* Forgot password */
   document.getElementById('forgotForm')?.addEventListener('submit', async e => {
     e.preventDefault();
-    const email = document.getElementById('forgotEmail').value.trim();
-    const btn   = document.getElementById('forgotBtn');
-    const msg   = document.getElementById('forgotMsg');
-    const succ  = document.getElementById('forgotSuccess');
-    msg.style.display = 'none'; succ.style.display = 'none';
+    const email  = document.getElementById('forgotEmail').value.trim();
+    const btn    = document.getElementById('forgotBtn');
+    const msg    = document.getElementById('forgotMsg');
+    const succ   = document.getElementById('forgotSuccess');
+    msg.style.display = 'none';
+    succ.style.display = 'none';
     btn.disabled = true; btn.textContent = 'Sending...';
+
     try {
-      const res = await fetch(`${AUTH_BASE}/recovery`, {
+      const res  = await fetch(`${AUTH_BASE}/recovery`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email })
       });
       btn.disabled = false; btn.textContent = 'Send Recovery Email';
-      if (res.ok || res.status === 201) {
-        succ.textContent = 'Recovery email sent! Check your inbox.';
+      if (res.ok || res.status === 200 || res.status === 201 || res.status === 204) {
+        succ.textContent = '✓ A temporary password has been sent to your email. Log in with it, then go to Profile → Change Password to set a new one.';
         succ.style.display = 'block';
         document.getElementById('forgotForm').reset();
       } else {
-        msg.textContent = 'Email not found. Please check and try again.';
+        const json = await res.json().catch(() => ({}));
+        msg.textContent = json.message || json.error || 'Email not found. Please check and try again.';
         msg.style.display = 'block';
       }
     } catch (err) {
@@ -624,21 +799,37 @@ function initAuthPage() {
     }
   });
 
+  /* Login */
   document.getElementById('loginForm')?.addEventListener('submit', async e => {
     e.preventDefault();
     const errBox = document.getElementById('loginError');
     const btn    = document.getElementById('loginBtn');
     errBox.classList.remove('visible');
     btn.disabled = true; btn.textContent = 'Logging in...';
+
     const email    = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPass').value;
     const result   = await apiLogin(email, password);
+
     btn.disabled = false; btn.textContent = 'Login';
+
     if (result.ok) {
-      const namePart  = email.split('@')[0];
-      const firstName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-      localStorage.setItem('craftbar_user', JSON.stringify({ firstName, email, access_token: result.data.access_token || result.data.token || '' }));
-      showToast('Welcome back, ' + firstName + '!');
+      const d        = result.data;
+      const namePart = email.split('@')[0];
+      const token    = d.access_token || d.token || d.accessToken || d.jwt || '';
+      localStorage.setItem('craftbar_user', JSON.stringify({
+        firstName:    d.firstName || (namePart.charAt(0).toUpperCase() + namePart.slice(1)),
+        lastName:     d.lastName  || '',
+        email:        d.email     || email,
+        age:          d.age       || '',
+        gender:       d.gender    || '',
+        address:      d.address   || '',
+        phone:        d.phone     || '',
+        zipcode:      d.zipcode   || '',
+        avatar:       d.avatar    || '',
+        access_token: token
+      }));
+      showToast('Welcome back, ' + (d.firstName || namePart) + '!');
       setTimeout(() => window.location.href = './index.html', 1000);
     } else {
       errBox.innerHTML = formatAuthError(result.data);
@@ -647,15 +838,20 @@ function initAuthPage() {
   });
 }
 
+/* ── Init ─────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   updateNavAuth();
   renderFavDrawer();
+
   if (document.getElementById('cocktailGrid'))  initCocktailsPage();
   if (document.getElementById('featuredGrid'))  initFeaturedCocktails();
   if (document.getElementById('profileFavGrid') || document.getElementById('infoForm')) initProfilePage();
   if (document.getElementById('loginForm') || document.getElementById('registerForm'))  initAuthPage();
+
   document.getElementById('detailOverlay')?.addEventListener('click', function (e) {
     if (e.target === this) closeDetailModal();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetailModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDetailModal();
+  });
 });
