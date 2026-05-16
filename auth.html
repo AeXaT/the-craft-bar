@@ -12,54 +12,35 @@
   <link rel="stylesheet" href="./contact.css" />
   <style>
     .auth-wrap { max-width: 540px; margin: 0 auto; }
-    .auth-tabs {
-      display: flex; margin-bottom: 30px;
-      border-bottom: 1px solid rgba(212,160,67,0.3);
-    }
-    .auth-tab {
-      flex: 1; padding: 14px; background: none; border: none; color: #e8d5b0;
-      font-size: 15px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
-      border-bottom: 2px solid transparent; margin-bottom: -1px; transition: 0.3s;
-      font-family: inherit;
-    }
+    .auth-tabs { display: flex; margin-bottom: 30px; border-bottom: 1px solid rgba(212,160,67,0.3); }
+    .auth-tab { flex: 1; padding: 14px; background: none; border: none; color: #e8d5b0; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: 0.3s; font-family: inherit; }
     .auth-tab.active { color: #d4a043; border-bottom-color: #d4a043; }
     .auth-panel { display: none; }
     .auth-panel.active { display: block; }
-    .form-container {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(212,160,67,0.2);
-      border-radius: 8px; padding: 36px 40px;
-    }
+    .form-container { background: rgba(255,255,255,0.04); border: 1px solid rgba(212,160,67,0.2); border-radius: 8px; padding: 36px 40px; }
     .input-box { display: flex; flex-direction: column; margin-bottom: 20px; }
-    .input-box label {
-      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-      color: #d4a043; margin-bottom: 7px;
-    }
-    .input-box input, .input-box select {
-      background: rgba(255,255,255,0.06);
-      border: none; border-bottom: 1px solid rgba(212,160,67,0.3);
-      padding: 10px; color: #e8d5b0; font-size: 15px;
-      outline: none; transition: 0.3s; font-family: inherit;
-    }
+    .input-box label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #d4a043; margin-bottom: 7px; }
+    .input-box input, .input-box select { background: rgba(255,255,255,0.06); border: none; border-bottom: 1px solid rgba(212,160,67,0.3); padding: 10px; color: #e8d5b0; font-size: 15px; outline: none; transition: 0.3s; font-family: inherit; }
     .input-box input:focus, .input-box select:focus { border-bottom-color: #d4a043; }
     .input-box select option { background: #1a1008; color: #e8d5b0; }
     .input-row { display: flex; gap: 16px; }
     .input-row .input-box { flex: 1; }
     .input-optional { font-size: 10px; opacity: 0.4; margin-left: 6px; text-transform: none; letter-spacing: 0; }
     .auth-note { text-align: center; margin-top: 20px; opacity: 0.5; font-size: 13px; }
-    .auth-error {
-      background: rgba(220,50,50,0.12); border: 1px solid rgba(220,50,50,0.3);
-      border-radius: 5px; padding: 10px 14px; margin-bottom: 18px;
-      color: #e07070; font-size: 13px; display: none; line-height: 1.5;
-    }
+    .auth-error { background: rgba(220,50,50,0.12); border: 1px solid rgba(220,50,50,0.3); border-radius: 5px; padding: 10px 14px; margin-bottom: 18px; color: #e07070; font-size: 13px; display: none; line-height: 1.5; }
     .auth-error.visible { display: block; }
+    @media (max-width: 600px) {
+      .auth-wrap { max-width: 100%; padding: 0 4px; }
+      .form-container { padding: 24px 18px; }
+      .input-row { flex-direction: column; gap: 0; }
+      .input-row .input-box { flex: none; width: 100%; }
+      .input-box input, .input-box select { font-size: 16px; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>emailjs.init("jd5MSWIbWIqEGG9OB");</script>
 </head>
 <body>
-
-  <!-- navbar -->
   <div class="navbar">
     <a href="./index.html" class="logo">The Craft <span>Bar</span><svg width="44" height="44" viewBox="30 35 420 395" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path d="M220 390V180C220 150 250 140 270 120V60H245" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M270 120C305 125 320 145 320 170" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M280 250H410L250 410H350" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M280 250C290 285 330 300 350 330" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     <nav id="mainNav">
@@ -76,7 +57,6 @@
     </label>
   </div>
 
-  <!-- page header -->
   <div class="page-header">
     <div class="page-header-content">
       <h1>My Account</h1>
@@ -90,8 +70,6 @@
         <button class="auth-tab active" data-panel="loginPanel">Login</button>
         <button class="auth-tab" data-panel="registerPanel">Register</button>
       </div>
-
-      <!-- ── Login ─────────────────────────────────────────── -->
       <div id="loginPanel" class="auth-panel active">
         <div class="form-container">
           <div id="loginError" class="auth-error"></div>
@@ -111,8 +89,6 @@
           <p class="auth-note">Don't have an account? Click Register above.</p>
         </div>
       </div>
-
-      <!-- ── Register ───────────────────────────────────────── -->
       <div id="registerPanel" class="auth-panel">
         <div class="form-container">
           <div id="registerError" class="auth-error"></div>
@@ -177,10 +153,8 @@
     </div>
   </section>
 
-  <!-- Toast -->
   <div id="toast"></div>
 
-  <!-- footer -->
   <footer>
     <a href="./index.html" class="footer-logo">The Craft Bar</a>
     <div class="footer-copy">© 2025 The Craft Bar. All rights reserved.</div>
