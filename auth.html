@@ -12,35 +12,74 @@
   <link rel="stylesheet" href="./contact.css" />
   <style>
     .auth-wrap { max-width: 540px; margin: 0 auto; }
-    .auth-tabs { display: flex; margin-bottom: 30px; border-bottom: 1px solid rgba(212,160,67,0.3); }
-    .auth-tab { flex: 1; padding: 14px; background: none; border: none; color: #e8d5b0; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: 0.3s; font-family: inherit; }
+    .auth-tabs {
+      display: flex; margin-bottom: 30px;
+      border-bottom: 1px solid rgba(212,160,67,0.3);
+    }
+    .auth-tab {
+      flex: 1; padding: 14px; background: none; border: none; color: #e8d5b0;
+      font-size: 15px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px; transition: 0.3s;
+      font-family: inherit;
+    }
     .auth-tab.active { color: #d4a043; border-bottom-color: #d4a043; }
     .auth-panel { display: none; }
     .auth-panel.active { display: block; }
-    .form-container { background: rgba(255,255,255,0.04); border: 1px solid rgba(212,160,67,0.2); border-radius: 8px; padding: 36px 40px; }
+    .form-container {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(212,160,67,0.2);
+      border-radius: 8px; padding: 36px 40px;
+    }
     .input-box { display: flex; flex-direction: column; margin-bottom: 20px; }
-    .input-box label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #d4a043; margin-bottom: 7px; }
-    .input-box input, .input-box select { background: rgba(255,255,255,0.06); border: none; border-bottom: 1px solid rgba(212,160,67,0.3); padding: 10px; color: #e8d5b0; font-size: 15px; outline: none; transition: 0.3s; font-family: inherit; }
+    .input-box label {
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #d4a043; margin-bottom: 7px;
+    }
+    .input-box input, .input-box select {
+      background: rgba(255,255,255,0.06);
+      border: none; border-bottom: 1px solid rgba(212,160,67,0.3);
+      padding: 10px; color: #e8d5b0; font-size: 15px;
+      outline: none; transition: 0.3s; font-family: inherit;
+    }
     .input-box input:focus, .input-box select:focus { border-bottom-color: #d4a043; }
     .input-box select option { background: #1a1008; color: #e8d5b0; }
     .input-row { display: flex; gap: 16px; }
     .input-row .input-box { flex: 1; }
     .input-optional { font-size: 10px; opacity: 0.4; margin-left: 6px; text-transform: none; letter-spacing: 0; }
     .auth-note { text-align: center; margin-top: 20px; opacity: 0.5; font-size: 13px; }
-    .auth-error { background: rgba(220,50,50,0.12); border: 1px solid rgba(220,50,50,0.3); border-radius: 5px; padding: 10px 14px; margin-bottom: 18px; color: #e07070; font-size: 13px; display: none; line-height: 1.5; }
+    .auth-error {
+      background: rgba(220,50,50,0.12); border: 1px solid rgba(220,50,50,0.3);
+      border-radius: 5px; padding: 10px 14px; margin-bottom: 18px;
+      color: #e07070; font-size: 13px; display: none; line-height: 1.5;
+    }
     .auth-error.visible { display: block; }
+
+    /* Password eye toggle */
+    .pass-wrap { position: relative; display: flex; align-items: center; }
+    .pass-wrap input { flex: 1; padding-right: 36px; }
+    .eye-btn {
+      position: absolute; right: 8px;
+      background: none; border: none; cursor: pointer;
+      color: rgba(212,160,67,0.4);
+      padding: 4px; line-height: 1; transition: color 0.2s;
+    }
+    .eye-btn:hover { color: #d4a043; }
+
+    /* Mobile responsive */
     @media (max-width: 600px) {
       .auth-wrap { max-width: 100%; padding: 0 4px; }
       .form-container { padding: 24px 18px; }
       .input-row { flex-direction: column; gap: 0; }
       .input-row .input-box { flex: none; width: 100%; }
-      .input-box input, .input-box select { font-size: 16px; }
+      .input-box input, .input-box select { font-size: 16px; } /* prevents zoom on iOS */
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>emailjs.init("jd5MSWIbWIqEGG9OB");</script>
 </head>
 <body>
+
+  <!-- navbar -->
   <div class="navbar">
     <a href="./index.html" class="logo">The Craft <span>Bar</span><svg width="44" height="44" viewBox="30 35 420 395" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path d="M220 390V180C220 150 250 140 270 120V60H245" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M270 120C305 125 320 145 320 170" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M280 250H410L250 410H350" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M280 250C290 285 330 300 350 330" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     <nav id="mainNav">
@@ -51,21 +90,28 @@
     </nav>
     <label class="menuButton">
       <input type="checkbox" id="check" onclick="toggleNav()" />
-      <span class="top"></span><span class="mid"></span><span class="bot"></span>
+      <span class="top"></span>
+      <span class="mid"></span>
+      <span class="bot"></span>
     </label>
   </div>
+
+  <!-- page header -->
   <div class="page-header">
     <div class="page-header-content">
       <h1>My Account</h1>
       <p>Login or create an account to save your favourites</p>
     </div>
   </div>
+
   <section>
     <div class="auth-wrap">
       <div class="auth-tabs">
         <button class="auth-tab active" data-panel="loginPanel">Login</button>
         <button class="auth-tab" data-panel="registerPanel">Register</button>
       </div>
+
+      <!-- ── Login ─────────────────────────────────────────── -->
       <div id="loginPanel" class="auth-panel active">
         <div class="form-container">
           <div id="loginError" class="auth-error"></div>
@@ -76,7 +122,10 @@
             </div>
             <div class="input-box">
               <label>Password</label>
-              <input type="password" id="loginPass" placeholder="Your password" required />
+              <div class="pass-wrap">
+                <input type="password" id="loginPass" placeholder="Your password" required />
+                <button type="button" class="eye-btn" onclick="toggleEye('loginPass', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
             </div>
             <div style="text-align:center;margin-top:14px;">
               <button type="submit" class="btn-gold" id="loginBtn">Login</button>
@@ -86,29 +135,65 @@
           <p class="auth-note" style="margin-top:10px;"><a href="#" onclick="showForgotPassword()" style="color:#d4a043;opacity:0.7;font-size:12px;">Forgot your password?</a></p>
         </div>
       </div>
+
+      <!-- ── Register ───────────────────────────────────────── -->
       <div id="registerPanel" class="auth-panel">
         <div class="form-container">
           <div id="registerError" class="auth-error"></div>
           <form id="registerForm">
             <div class="input-row">
-              <div class="input-box"><label>First Name</label><input type="text" id="regFirstName" placeholder="Alex" required /></div>
-              <div class="input-box"><label>Last Name</label><input type="text" id="regLastName" placeholder="Smith" required /></div>
-            </div>
-            <div class="input-row">
-              <div class="input-box"><label>Age</label><input type="number" id="regAge" placeholder="25" min="1" max="120" required /></div>
               <div class="input-box">
-                <label>Gender</label>
-                <select id="regGender" required><option value="">Select...</option><option value="MALE">Male</option><option value="FEMALE">Female</option></select>
+                <label>First Name</label>
+                <input type="text" id="regFirstName" placeholder="Alex" required />
+              </div>
+              <div class="input-box">
+                <label>Last Name</label>
+                <input type="text" id="regLastName" placeholder="Smith" required />
               </div>
             </div>
-            <div class="input-box"><label>Email Address</label><input type="email" id="regEmail" placeholder="alex@example.com" required /></div>
-            <div class="input-box"><label>Password <span style="font-size:10px;opacity:0.5;">(min 8 characters)</span></label><input type="password" id="regPass" placeholder="Create a password" required minlength="8" /></div>
-            <div class="input-box"><label>Address</label><input type="text" id="regAddress" placeholder="123 Main St, City" required /></div>
             <div class="input-row">
-              <div class="input-box"><label>Phone</label><input type="tel" id="regPhone" placeholder="+1234567890" required /></div>
-              <div class="input-box"><label>Zipcode</label><input type="text" id="regZipcode" placeholder="10001" required /></div>
+              <div class="input-box">
+                <label>Age</label>
+                <input type="number" id="regAge" placeholder="25" min="1" max="120" required />
+              </div>
+              <div class="input-box">
+                <label>Gender</label>
+                <select id="regGender" required>
+                  <option value="">Select...</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                </select>
+              </div>
             </div>
-            <div class="input-box"><label>Avatar URL <span class="input-optional">(optional)</span></label><input type="url" id="regAvatar" placeholder="https://example.com/photo.jpg" /></div>
+            <div class="input-box">
+              <label>Email Address</label>
+              <input type="email" id="regEmail" placeholder="alex@example.com" required />
+            </div>
+            <div class="input-box">
+              <label>Password <span style="font-size:10px;opacity:0.5;">(min 8 characters)</span></label>
+              <div class="pass-wrap">
+                <input type="password" id="regPass" placeholder="Create a password" required minlength="8" />
+                <button type="button" class="eye-btn" onclick="toggleEye('regPass', this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+            </div>
+            <div class="input-box">
+              <label>Address</label>
+              <input type="text" id="regAddress" placeholder="123 Main St, City" required />
+            </div>
+            <div class="input-row">
+              <div class="input-box">
+                <label>Phone</label>
+                <input type="tel" id="regPhone" placeholder="+1234567890" required />
+              </div>
+              <div class="input-box">
+                <label>Zipcode</label>
+                <input type="text" id="regZipcode" placeholder="10001" required />
+              </div>
+            </div>
+            <div class="input-box">
+              <label>Avatar URL <span class="input-optional">(optional)</span></label>
+              <input type="url" id="regAvatar" placeholder="https://example.com/photo.jpg" />
+            </div>
             <div style="text-align:center;margin-top:14px;">
               <button type="submit" class="btn-gold" id="registerBtn">Create Account</button>
             </div>
@@ -116,13 +201,18 @@
           <p class="auth-note">Already have an account? Click Login above.</p>
         </div>
       </div>
+
+      <!-- Forgot Password -->
       <div id="forgotPanel" class="auth-panel" style="margin-top:20px;">
         <div class="form-container">
           <div id="forgotMsg" class="auth-error"></div>
           <div id="forgotSuccess" style="display:none;background:rgba(50,180,80,0.12);border:1px solid rgba(50,180,80,0.3);border-radius:5px;padding:10px 14px;margin-bottom:18px;color:#6dbb7a;font-size:13px;"></div>
           <p style="color:#e8d5b0;opacity:0.7;font-size:14px;margin-bottom:20px;">Enter your email and we will send you a recovery link.</p>
           <form id="forgotForm">
-            <div class="input-box"><label>Email Address</label><input type="email" id="forgotEmail" placeholder="alex@example.com" required /></div>
+            <div class="input-box">
+              <label>Email Address</label>
+              <input type="email" id="forgotEmail" placeholder="alex@example.com" required />
+            </div>
             <div style="text-align:center;margin-top:14px;">
               <button type="submit" class="btn-gold" id="forgotBtn">Send Recovery Email</button>
             </div>
@@ -132,11 +222,16 @@
       </div>
     </div>
   </section>
+
+  <!-- Toast -->
   <div id="toast"></div>
+
+  <!-- footer -->
   <footer>
     <a href="./index.html" class="footer-logo">The Craft Bar</a>
     <div class="footer-copy">© 2025 The Craft Bar. All rights reserved.</div>
   </footer>
+
   <script src="./burger.js"></script>
   <script src="./script.js"></script>
 </body>
