@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bar Equipment – The Craft Bar</title>
+  <meta name="description" content="Essential bar tools and equipment every bartender needs — from shakers to jiggers." />
+  <meta name="keywords" content="bar equipment, cocktail shaker, jigger, muddler, bar tools, bartender equipment" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="The Craft Bar – A Bartender's Guide" />
+  <meta property="og:description" content="Your ultimate guide to cocktails, spirits, and the art of mixology." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1200" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&family=IM+Fell+English:ital@1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./equipment.css" />
+</head>
+<body>
+
+  <!-- navbar -->
+  <div class="navbar">
+    <a href="./index.html" class="logo">The Craft <span>Bar</span><svg width="44" height="44" viewBox="30 35 420 395" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path d="M220 390V180C220 150 250 140 270 120V60H245" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M270 120C305 125 320 145 320 170" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M280 250H410L250 410H350" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M280 250C290 285 330 300 350 330" stroke="#d4a043" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <nav id="mainNav">
+      <a href="./index.html">Home</a>
+      <a href="./cocktails.html">Cocktails</a>
+      <a href="./equipment.html" class="active">Equipment</a>
+      <a href="./auth.html" id="authNavLink">Login</a>
+    </nav>
+    <label class="menuButton">
+      <input type="checkbox" id="check" onclick="toggleNav()" />
+      <span class="top"></span>
+      <span class="mid"></span>
+      <span class="bot"></span>
+    </label>
+  </div>
+
+  <!--page header-->
+  <div class="page-header">
+    <div class="page-header-content">
+      <h1>Bar Equipment</h1>
+      <p>The essential tools behind every great drink</p>
+    </div>
+  </div>
+
+  <!--equipment-->
+  <section>
+    <div class="section-title">
+      <h2>Essential Bar Tools</h2>
+      <div class="divider"></div>
+      <p>Every professional bartender relies on quality tools. Here's what you need to stock your bar.</p>
+    </div>
+    <div class="equipment-grid">
+      <div class="equip-card" onclick="openEquipModal('shaker')" style="cursor:pointer;">
+        <img class="equip-img" src="https://i0.wp.com/www.proofcocktails.nl/wp-content/uploads/2017/03/3shakers.jpg?resize=3168%2C2585&ssl=1" alt="Cocktail Shaker" />
+        <div class="equip-info">
+          <h3>Cocktail Shaker</h3>
+          <p>The cobbler or Boston shaker — your most essential tool. Used for shaking spirits with ice to chill and dilute. A good shaker has a tight seal and comfortable grip.</p>
+        </div>
+      </div>
+      <div class="equip-card" onclick="openEquipModal('jigger')" style="cursor:pointer;">
+        <img class="equip-img" src="https://image.made-in-china.com/202f0j00zlAbeRwEZHoI/Cocktails-Jigger-Double-Jigger-2oz-1oz-Cocktail-Jigger-with-Measurements-Inside-Get-Accurate.webp" alt="Jigger" />
+        <div class="equip-info">
+          <h3>Jigger</h3>
+          <p>Precision is everything in mixology. A double jigger (25ml / 50ml) ensures consistent, well-balanced cocktails every time. Never free-pour in a professional setting.</p>
+        </div>
+      </div>
+      <div class="equip-card" onclick="openEquipModal('spoon')" style="cursor:pointer;">
+        <img class="equip-img" src="https://abarabove.com/wp-content/uploads/2018/08/P1-Bar-Spoons-Different-Types.jpg" alt="Bar Spoon" />
+        <div class="equip-info">
+          <h3>Bar Spoon</h3>
+          <p>A long-handled spoon used for stirring cocktails. Stirred drinks like the Negroni or Manhattan require gentle movement to chill without over-diluting.</p>
+        </div>
+      </div>
+      <div class="equip-card" onclick="openEquipModal('muddler')" style="cursor:pointer;">
+        <img class="equip-img" src="https://www.minimax.com.au/cdn/shop/products/7019_1_1440x1440.jpg?v=1662086740" alt="Muddler" />
+        <div class="equip-info">
+          <h3>Muddler</h3>
+          <p>Used to crush fruits, herbs, and sugar in the bottom of a glass. Essential for Mojitos, Old Fashioneds, and any drink requiring fresh muddled ingredients.</p>
+        </div>
+      </div>
+      <div class="equip-card" onclick="openEquipModal('strainer')" style="cursor:pointer;">
+        <img class="equip-img" src="https://cocktailsdistilled.com/wp-content/uploads/2018/08/Strainers-bar-tools.jpg" alt="Strainer" />
+        <div class="equip-info">
+          <h3>Strainer</h3>
+          <p>A Hawthorne strainer fits over the shaker and filters out ice when pouring. A fine mesh strainer is used for double-straining to remove small ice chips.</p>
+        </div>
+      </div>
+      <div class="equip-card" onclick="openEquipModal('juicer')" style="cursor:pointer;">
+        <img class="equip-img" src="https://www.cocktailemporium.com/cdn/shop/products/one_41354c2c-0a0e-41ef-a284-4fc429c6468d.jpg?v=1571264717" alt="Citrus Juicer" />
+        <div class="equip-info">
+          <h3>Citrus Juicer</h3>
+          <p>Fresh juice is non-negotiable in craft cocktails. A hand juicer or Mexican elbow press extracts maximum juice quickly. Never use bottled citrus in serious cocktails.</p>
+        </div>
+      </div>
+      <div class="equip-card" onclick="openEquipModal('knife')" style="cursor:pointer;">
+        <img class="equip-img" src="https://wordswithboards.com/cdn/shop/products/BAR_CUTTING_BOARD_www.wordswithboards.com_2_1200x.jpg?v=1610398973" alt="Paring Knife and Board" />
+        <div class="equip-info">
+          <h3>Paring Knife & Board</h3>
+          <p>For cutting garnishes — citrus twists, wedges, wheels. A sharp knife and dedicated cutting board keep prep fast and clean behind the bar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer-->
+  <footer>
+    <a href="#" class="footer-logo">The Craft Bar</a>
+    <div class="footer-copy">© 2025 The Craft Bar. All rights reserved.</div>
+  </footer>
+
+
+  <!-- Equipment detail popup -->
+  <div id="equipOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:99999;align-items:center;justify-content:center;backdrop-filter:blur(5px);" onclick="if(event.target===this)closeEquipModal()">
+    <div style="background:#1e1208;border:1px solid rgba(212,160,67,0.35);border-radius:12px;width:calc(100% - 40px);max-width:480px;max-height:88vh;overflow-y:auto;position:relative;">
+      <button onclick="closeEquipModal()" style="position:absolute;top:12px;right:14px;background:rgba(0,0,0,0.6);border:none;color:#e8d5b0;font-size:15px;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:10;">✕</button>
+      <div id="equipBody"></div>
+    </div>
+  </div>
+
+  <script>
+  const equipData = {"shaker": {"name": "Cocktail Shaker", "desc": "The cobbler or Boston shaker — your most essential tool. Used for shaking spirits with ice to chill and dilute. A good shaker has a tight seal and comfortable grip. The Boston shaker consists of two tins, while the cobbler adds a built-in strainer. Most professional bartenders prefer the Boston shaker for speed and control.", "img": "https://i0.wp.com/www.proofcocktails.nl/wp-content/uploads/2017/03/3shakers.jpg?resize=3168%2C2585&ssl=1"}, "jigger": {"name": "Jigger", "desc": "Precision is everything in mixology. A double jigger (25ml / 50ml) ensures consistent, well-balanced cocktails every time. Never free-pour in a professional setting. Look for a jigger with clear measurement markings inside — this makes reading measurements fast under low bar lighting.", "img": "https://image.made-in-china.com/202f0j00zlAbeRwEZHoI/Cocktails-Jigger-Double-Jigger-2oz-1oz-Cocktail-Jigger-with-Measurements-Inside-Get-Accurate.webp"}, "spoon": {"name": "Bar Spoon", "desc": "A long-handled spoon used for stirring cocktails. Stirred drinks like the Negroni or Manhattan require gentle movement to chill without over-diluting. The twisted handle allows for smooth rotation between your fingers, and the flat end can be used for layering ingredients.", "img": "https://abarabove.com/wp-content/uploads/2018/08/P1-Bar-Spoons-Different-Types.jpg"}, "muddler": {"name": "Muddler", "desc": "Used to crush fruits, herbs, and sugar in the bottom of a glass. Essential for Mojitos, Old Fashioneds, and any drink requiring fresh muddled ingredients. Use a gentle press-and-twist motion — over-muddling herbs like mint releases bitter compounds from the stems.", "img": "https://www.minimax.com.au/cdn/shop/products/7019_1_1440x1440.jpg?v=1662086740"}, "strainer": {"name": "Strainer", "desc": "A Hawthorne strainer fits over the shaker and filters out ice when pouring. A fine mesh strainer is used for double-straining to remove small ice chips and pulp. Double-straining is the mark of a well-made cocktail — it gives the drink a clean, professional texture.", "img": "https://cocktailsdistilled.com/wp-content/uploads/2018/08/Strainers-bar-tools.jpg"}, "juicer": {"name": "Citrus Juicer", "desc": "Fresh juice is non-negotiable in craft cocktails. A hand juicer or Mexican elbow press extracts maximum juice quickly. Never use bottled citrus in serious cocktails. Fresh citrus juice oxidises quickly — squeeze to order for the best flavour.", "img": "https://www.cocktailemporium.com/cdn/shop/products/one_41354c2c-0a0e-41ef-a284-4fc429c6468d.jpg?v=1571264717"}, "knife": {"name": "Paring Knife & Board", "desc": "For cutting garnishes — citrus twists, wedges, wheels. A sharp knife and dedicated cutting board keep prep fast and clean behind the bar. A channel knife is also useful for cutting long spiral citrus peels as elegant garnishes.", "img": "https://wordswithboards.com/cdn/shop/products/BAR_CUTTING_BOARD_www.wordswithboards.com_2_1200x.jpg?v=1610398973"}};
+
+  function openEquipModal(id) {
+    const item = equipData[id];
+    if (!item) return;
+    document.getElementById('equipBody').innerHTML = `
+      <div style="width:100%;background:#140d05;">
+        <img src="${item.img}" alt="${item.name}" style="width:100%;height:auto;display:block;object-fit:contain;" />
+      </div>
+      <div style="padding:22px 26px 28px;">
+        <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:#d4a043;letter-spacing:2px;margin-bottom:14px;">${item.name}</h2>
+        <p style="font-size:14px;line-height:1.85;opacity:0.82;color:#e8d5b0;">${item.desc}</p>
+      </div>`;
+    document.getElementById('equipOverlay').style.display = 'flex';
+  }
+
+  function closeEquipModal() {
+    document.getElementById('equipOverlay').style.display = 'none';
+  }
+
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeEquipModal(); });
+  </script>
+
+  <script src="./burger.js"></script>
+  <script src="./script.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", updateNavAuth);</script>
+</body>
+</html>
