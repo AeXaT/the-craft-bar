@@ -139,16 +139,29 @@ function formatAuthError(json) {
 
 /* ── Welcome email via EmailJS ────────────────────────────── */
 function sendWelcomeEmail(firstName, lastName, email) {
-  if (typeof emailjs === 'undefined') return;
-  emailjs.send('craft_bar', 'template_ebktx7v', {
-    user_name:  firstName + ' ' + lastName,
-    user_email: email
-  }).catch(() => {});
+  const doSend = () => {
+    if (typeof emailjs === 'undefined') {
+      setTimeout(doSend, 500);
+      return;
+    }
+    emailjs.send('craft_bar', 'template_ebktx7v', {
+      user_name:  firstName + ' ' + lastName,
+      user_email: email,
+      to_email:   email,
+      name:       firstName + ' ' + lastName
+    }).then(() => console.log('Welcome email sent'))
+      .catch(err => console.warn('EmailJS error:', err));
+  };
+  setTimeout(doSend, 300);
 }
 
 /* ── Favourites ───────────────────────────────────────────── */
-function getFavourites() { return JSON.parse(localStorage.getItem('craftbar_favourites') || '[]'); }
-function saveFavourites(f) { localStorage.setItem('craftbar_favourites', JSON.stringify(f)); }
+function getFavKey() {
+  const u = getCurrentUser();
+  return u ? 'craftbar_favs_' + (u.email || 'guest') : 'craftbar_favs_guest';
+}
+function getFavourites() { return JSON.parse(localStorage.getItem(getFavKey()) || '[]'); }
+function saveFavourites(f) { localStorage.setItem(getFavKey(), JSON.stringify(f)); }
 function isFavourite(id) { return getFavourites().some(f => f.idDrink === id); }
 
 function toggleFavourite(e, drink) {
@@ -826,7 +839,7 @@ function initAuthPage() {
         address:      d.address   || '',
         phone:        d.phone     || '',
         zipcode:      d.zipcode   || '',
-        avatar:       d.avatar    || '',
+        avatar:       d.avatar || (() => { try { const prev = JSON.parse(localStorage.getItem('craftbar_user')||'null'); return (prev && prev.email === email) ? (prev.avatar||'') : ''; } catch(e){ return ''; } })(),
         access_token: token
       }));
       showToast('Welcome back, ' + (d.firstName || namePart) + '!');
